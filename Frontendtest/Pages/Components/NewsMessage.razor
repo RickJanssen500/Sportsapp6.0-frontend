@@ -1,0 +1,34 @@
+﻿@using System;
+
+<div class="col-md-7 mx-auto">
+    <div class="card bg-white mt-5">
+        <div class="card-body">
+            <p class="text-muted fst-italic" style="font-size: small">@path</p>
+            <h5 class="card-title h2">@title</h5>
+            <p class="card-text">@message</p>
+        </div>
+        <div class="card-footer">
+            @if (date == null)
+            {
+                <small class="text-muted">Gepubliceerd door @user</small>
+            }
+            else
+            {
+                <small class="text-muted">Gepubliceerd door @user op @date?.ToShortDateString() om @date?.ToShortTimeString()</small>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? path { get; set; }
+    [Parameter]
+    public string user { get; set; } = "onbekende gebruiker";
+    [Parameter]
+    public string? title { get; set; }
+    [Parameter]
+    public string? message { get; set; }
+    [Parameter]
+    public DateTime? date { get; set; }
+}

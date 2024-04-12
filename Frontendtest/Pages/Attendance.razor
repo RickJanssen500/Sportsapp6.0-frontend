@@ -1,0 +1,28 @@
+﻿@page "/attendance"
+@using Frontendtest.Pages.Components
+
+
+<PageTitle>Aanwezigheid</PageTitle>
+
+<div class="container">
+    <div class="row">
+        @if (true)
+        {
+            <div class="col-md-7 mx-auto">
+                <div class="card bg-white mt-5">
+                    <div class="card-body text-center">
+                        <p>Je hoeft geen aanwezigheid door te geven :)</p>
+                    </div>
+                </div>
+            </div>
+        }
+        <AttendanceComponent attendancepoint="0" date="DateTime.Today"/>
+        <AttendanceComponent attendancepoint="1" date="DateTime.Today" />
+        <AttendanceComponent attendancepoint="2" date="DateTime.Today" />
+        <AttendanceComponent attendancepoint="0" date="DateTime.Today" />
+        <AttendanceComponent attendancepoint="2" date="DateTime.Today" />
+        <AttendanceComponent attendancepoint="1" date="DateTime.Today" />
+       
+    </div>
+    <div><p>&nbsp;</p></div>
+</div>

@@ -1,0 +1,61 @@
+﻿@using System;
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+
+@if(attendancepoint == 0)
+{
+<div class="col-md-4 mx-auto">
+    <div class="card bg-white mt-5">
+        <p class="h5 text-center mt-2">Ben je aanwezig op</p>
+        <h5 class="card-title text-center h4">@date?.ToShortDateString()</h5>
+        <div class="btn-group" role="group">
+            <button type="button" @onclick="Present" class="btn btn-success">Aanwezig</button>
+            <button type="button" @onclick="Absent" class="btn btn-danger">Afwezig</button>
+        </div>
+    </div>
+</div>
+}
+@if (attendancepoint == 1)
+{
+    <div class="col-md-4 mx-auto">
+        <div class="card bg-success mt-5">
+            <p class="h5 text-white text-center mt-2">Je bent aanwezig op</p>
+            <h5 class="card-title text-white text-center h4">@date?.ToShortDateString()</h5>
+            <div class="btn-group" role="group">
+                <button type="button" @onclick="Reset" class="btn btn-secondary">Wijzigen?</button>
+            </div>
+        </div>
+    </div>
+}
+@if (attendancepoint == 2)
+{
+    <div class="col-md-4 mx-auto">
+        <div class="card bg-danger mt-5">
+            <p class="h5 text-center text-white mt-2">Je bent afwezig op</p>
+            <h5 class="card-title text-white text-center h4">@date?.ToShortDateString()</h5>
+            <div class="btn-group" role="group">
+                <button type="button" @onclick="Reset" class="btn btn-secondary">Wijzigen?</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int attendancepoint { get; set; }
+    [Parameter]
+    public DateTime? date { get; set; }
+
+    private void Present()
+    {
+        attendancepoint = 1;
+    }
+    private void Absent()
+    {
+        attendancepoint = 2;
+    }
+    private void Reset()
+    {
+        attendancepoint = 0;
+    }
+}

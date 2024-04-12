@@ -1,0 +1,24 @@
+﻿@page "/"
+@using Frontendtest.Pages.Components
+
+
+<PageTitle>Home</PageTitle>
+
+<div class="container">
+    <div class="row">
+        @if (true)
+        {
+            <div class="col-md-7 mx-auto">
+                <div class="card bg-white mt-5">
+                    <div class="card-body text-center">
+                        <p>Je hebt nog geen berichten :(</p>
+                    </div> 
+                </div> 
+            </div> 
+        }
+       <NewsMessage Message="Dit is een test bericht voor de frontend." path="JNL > JNH > Knammels" Title="Test bericht" User="Rick Janssen"/>
+       <NewsMessage Message="Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend." path="JNL > JNH" Title="Test bericht" User="Maikel Hendrix" />
+       <NewsMessage Message="Dit is een test bericht voor de frontend." path="JNL" Title="Test bericht" date="DateTime.Today"/>
+    </div>
+    <div><p>&nbsp;</p></div>
+</div>
