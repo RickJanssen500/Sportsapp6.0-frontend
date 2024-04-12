@@ -1,4 +1,4 @@
-name: Trigger auto deployment for sportsapp-frontend
+name: deployment
 
 # When this action will be executed
 on:
