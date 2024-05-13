@@ -1,24 +1,31 @@
 ﻿@page "/"
 @using Frontendtest.Pages.Components
+@using static Microsoft.AspNetCore.Components.Authorization.AuthorizeView
 
 
 <PageTitle>Home</PageTitle>
 
-<div class="container">
-    <div class="row">
-        @if (true)
-        {
-            <div class="col-md-7 mx-auto">
-                <div class="card bg-white mt-5">
-                    <div class="card-body text-center">
-                        <p>Je hebt nog geen berichten :(</p>
-                    </div> 
-                </div> 
-            </div> 
-        }
-       <NewsMessage Message="Dit is een test bericht voor de frontend." path="JNL > JNH > Knammels" Title="Test bericht" User="Rick Janssen"/>
-       <NewsMessage Message="Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend." path="JNL > JNH" Title="Test bericht" User="Maikel Hendrix" />
-       <NewsMessage Message="Dit is een test bericht voor de frontend." path="JNL" Title="Test bericht" date="DateTime.Today"/>
-    </div>
-    <div><p>&nbsp;</p></div>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <Messages />
+    </Authorized>
+    <NotAuthorized>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 mx-auto">
+                    <div class="card bg-white mt-5">
+                        <div class="card-body ">
+                            <h3 class="text-danger text-center">Het lijkt erop dat je niet bent ingelogd.</h3>
+                            <p class="text-center">Log in om gebruik te maken van de Sportsapp.</p>
+                            <div class="float-end">
+                                <NavLink class="btn btn-outline-danger text-end" href="login">
+                                Login
+                            </NavLink></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div><p>&nbsp;</p></div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

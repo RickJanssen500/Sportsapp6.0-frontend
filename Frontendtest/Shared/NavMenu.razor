@@ -1,4 +1,5 @@
-﻿
+﻿@using static Microsoft.AspNetCore.Components.Authorization.AuthorizeView
+
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#"><span class="text-danger">Sports</span>app</a>
@@ -6,23 +7,34 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                        Berichten
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="attendance">
-                        Aanwezigheid
-                    </NavLink>
-                </li>
+            <AuthorizeView>
+                <Authorized>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                                Berichten
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="attendance">
+                                Aanwezigheid
+                            </NavLink>
+                        </li>
 
 
-            </ul>
-            <NavLink class="d-flex btn btn-outline-light" href="account">
-                Account
-            </NavLink>
+                    </ul>
+                    <NavLink class="d-flex btn btn-outline-light" href="account">
+                        Account
+                    </NavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    </ul>
+                    <NavLink class="d-flex btn btn-outline-light" href="login">
+                        Login
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
     </div>
 </nav>

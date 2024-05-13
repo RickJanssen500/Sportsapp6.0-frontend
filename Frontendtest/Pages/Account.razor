@@ -1,4 +1,5 @@
 ﻿@page "/account"
+@attribute [Authorize]
 
 
 
@@ -9,10 +10,33 @@
             <div class="col-md-7 mx-auto">
                 <div class="card bg-white mt-5">
                     <div class="card-body text-center">
-                        <p>Hier komt account data</p>
+                    <h2>Profiel</h2>
+                     <p>Email : @Username</p>
+                    <div class="float-end">
+                        <NavLink class="btn btn-outline-danger text-end" href="logout">
+                            Log uit
+                        </NavLink>
+                    </div>
                     </div>
                 </div>
             </div>
     </div>
     <div><p>&nbsp;</p></div>
 </div>
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private string Username = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateTask;
+
+        Username = state.User.Identity.Name ?? string.Empty;
+
+        await base.OnInitializedAsync();
+    }
+
+   
+}
