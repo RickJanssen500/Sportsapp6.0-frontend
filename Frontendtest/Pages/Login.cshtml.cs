@@ -7,7 +7,7 @@ namespace Frontendtest.Pages
 {
     public class LoginModel : PageModel
     {
-        public async Task OnGet(string redirectUri = "https://sportsapp-frontend.gentleocean-f1a5d1ad.westeurope.azurecontainerapps.io/callback")
+        public async Task OnGet(string redirectUri = "/")
         {
             var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
                 .WithRedirectUri(redirectUri)
