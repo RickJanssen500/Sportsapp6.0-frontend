@@ -1,18 +1,51 @@
-﻿<div class="container">
+﻿@using Frontendtest.Objects
+@using System.Net.Http.Headers
+@using Microsoft.AspNetCore.Authentication
+@inject HttpClient Http
+
+
+
+<div class="container">
     <div class="row">
-        @if (true)
+        @if (messages == null)
         {
             <div class="col-md-7 mx-auto">
                 <div class="card bg-white mt-5">
                     <div class="card-body text-center">
-                        <p>Je hebt nog geen berichten :(</p>
+                        <p>laden...</p>
+
                     </div>
                 </div>
             </div>
         }
-        <NewsMessage Message="Dit is een test bericht voor de frontend." path="JNL > JNH > Knammels" Title="Test bericht" User="Rick Janssen" />
-        <NewsMessage Message="Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend.Dit is een test bericht voor de frontend." path="JNL > JNH" Title="Test bericht" User="Maikel Hendrix" />
-        <NewsMessage Message="Dit is een test bericht voor de frontend." path="JNL" Title="Test bericht" date="DateTime.Today" />
+        else{
+            if (messages.Count() == 0)
+            {
+            <div class="col-md-7 mx-auto">
+                <div class="card bg-white mt-5">
+                    <div class="card-body text-center">
+                        <p>Je hebt nog geen berichten :(</p>
+                        
+                    </div>
+                </div>
+            </div>
+            }
+            else{
+                foreach (MessageDTO message in messages)
+                {
+                    <NewsMessage Message="@message.Message" path = "@message.Group" User = "@message.User" Title = "@message.Title" date = "@message.Date" />
+                }
+            }
+        }
     </div>
     <div><p>&nbsp;</p></div>
 </div>
+
+@code {
+    private List<MessageDTO>? messages;
+
+    protected override async Task OnInitializedAsync()
+        {
+        messages = await Http.GetFromJsonAsync<List<MessageDTO>>("api/Message");
+        }
+}
