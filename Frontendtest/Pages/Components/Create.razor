@@ -1,0 +1,100 @@
+﻿@using Frontendtest.Objects
+@using System.Security.Claims
+@inject NavigationManager Navigation
+
+<button class="d-flex btn btn-outline-light m-2" @onclick="OpenModal">Nieuw bericht</button>
+
+@if (isModalOpen)
+{
+    <div class="modal fade show" tabindex="-1" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Maak een bericht</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@formData" OnValidSubmit="HandleValidSubmit">
+                        <div class="mb-3">
+                             @if (groupError == true) { 
+                            <p class="text-danger fw-bold">Kies een groep!</p>
+                            }  
+                            <label for="groep" class="form-label">Groep</label>
+                            <InputSelect id="groep" class="form-control" @bind-Value="formData.Group">
+                                <option>Kies een groep</option>
+                                @foreach (Claim role in roles)
+                                {
+                                    if(role.Value != "beheer"){
+                                    <option value="@role.Value">@role.Value</option>
+                                    }
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="mb-3">
+                            <label for="titel" class="form-label">Titel</label>
+                            <InputText id="titel" class="form-control" @bind-Value="formData.Title" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="bericht" class="form-label">Bericht</label>
+                            <InputTextArea id="bericht" class="form-control" @bind-Value="formData.Message" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Publiseer</button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isModalOpen = false;
+    private bool groupError = false;
+    private MessageDTO formData = new();
+
+    private void OpenModal()
+    {
+        isModalOpen = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalOpen = false;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (formData.Group == null || formData.Group == "Kies een groep")
+        {
+            groupError = true;
+        }
+        else
+        {
+                formData.Date = DateTime.Now;
+                formData.User = Username;
+                formData.Id = 0;
+                HttpClient _httpClient = new();
+                var response = await _httpClient.PostAsJsonAsync(UrlProvider.url + "/message", formData);
+                response.EnsureSuccessStatusCode();
+                Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        }
+     
+
+    }
+}
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private string Username = "";
+    private List<Claim> roles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateTask;
+
+        Username = state.User.Identity.Name ?? string.Empty;
+        roles = state.User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+        await base.OnInitializedAsync();
+    }
+
+
+}

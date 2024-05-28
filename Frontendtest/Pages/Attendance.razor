@@ -1,5 +1,6 @@
 ﻿@page "/attendance"
 @using Frontendtest.Pages.Components
+@using System.Security.Claims
 @attribute [Authorize]
 
 
@@ -7,7 +8,7 @@
 
 <div class="container">
     <div class="row">
-        @if (true)
+        @if (attendance)
         {
             <div class="col-md-7 mx-auto">
                 <div class="card bg-white mt-5">
@@ -17,13 +18,39 @@
                 </div>
             </div>
         }
+        else{
+            <div><p>&nbsp;</p></div>
         <AttendanceComponent attendancepoint="0" date="DateTime.Today"/>
         <AttendanceComponent attendancepoint="1" date="DateTime.Today" />
         <AttendanceComponent attendancepoint="2" date="DateTime.Today" />
         <AttendanceComponent attendancepoint="0" date="DateTime.Today" />
         <AttendanceComponent attendancepoint="2" date="DateTime.Today" />
         <AttendanceComponent attendancepoint="1" date="DateTime.Today" />
-       
+        }
     </div>
     <div><p>&nbsp;</p></div>
 </div>
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private List<Claim> roles;
+    private bool attendance = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateTask;
+        roles = state.User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+        foreach (Claim role in roles)
+        {
+            if (role.Value == "Knammels")
+            {
+                attendance = false;
+            }
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+
+}

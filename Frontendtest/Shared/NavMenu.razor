@@ -23,6 +23,9 @@
 
 
                     </ul>
+                    <AuthorizeView Roles="beheer" Context="innerContext">
+                        <Frontendtest.Pages.Components.Create />
+                    </AuthorizeView>
                     <NavLink class="d-flex btn btn-outline-light" href="account">
                         Account
                     </NavLink>

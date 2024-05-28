@@ -1,0 +1,52 @@
+﻿@using Frontendtest.Objects
+@using System.Security.Claims
+@inject NavigationManager Navigation
+
+<button class="btn btn-outline-danger" @onclick="OpenModal">Verwijder bericht</button>
+
+@if (isModalOpen)
+{
+    <div class="modal fade show" tabindex="-1" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Verwijder bericht</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+
+                        <p class="text-center">Weet je zeker dat je @formData.Title van @formData.Group wilt verijderen?</p>
+                    <p class="text-center text-danger">Deze actie kun je niet terug draaien!</p>
+                    <div class="d-flex justify-content-evenly">
+                        <button @onclick="CloseModal" class="btn btn-primary">Anuleer</button>
+                        <button  @onclick="HandleValidSubmit" class="btn btn-danger">Verwijder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isModalOpen = false;
+    [Parameter]
+    public MessageDTO formData { get; set; }
+
+    private void OpenModal()
+    {
+        isModalOpen = true;
+    }
+
+    private void CloseModal()
+    {
+        isModalOpen = false;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        HttpClient _httpClient = new();
+        var response = await _httpClient.DeleteAsync(UrlProvider.url + "/message/" + formData.Id);
+        response.EnsureSuccessStatusCode();
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+}

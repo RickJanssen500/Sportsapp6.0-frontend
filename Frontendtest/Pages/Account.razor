@@ -1,4 +1,5 @@
 ﻿@page "/account"
+@using System.Security.Claims
 @attribute [Authorize]
 
 
@@ -9,9 +10,22 @@
     <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card bg-white mt-5">
-                    <div class="card-body text-center">
+                    <div class="card-body ">
                     <h2>Profiel</h2>
-                     <p>Email : @Username</p>
+                    <AuthorizeView Roles="beheer" >
+                        <p class="text-danger"><b>Beheerder</b></p>
+                    </AuthorizeView>
+                    <p><b>Email :</b> @Username</p>
+                     <p><b>Jouw groepen</b></p>
+                     <ul>
+                     @foreach (Claim role in roles)
+                    {
+                        if (role.Value != "beheer")
+                        {
+                        <li>@role.Value</li>           
+                        }
+                    }
+                    </ul>
                     <div class="float-end">
                         <NavLink class="btn btn-outline-danger text-end" href="logout">
                             Log uit
@@ -28,12 +42,14 @@
     [CascadingParameter]
     public Task<AuthenticationState> AuthenticationStateTask { get; set; }
     private string Username = "";
+    private List<Claim> roles;
 
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthenticationStateTask;
 
         Username = state.User.Identity.Name ?? string.Empty;
+        roles = state.User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList();
 
         await base.OnInitializedAsync();
     }

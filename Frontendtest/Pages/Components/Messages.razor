@@ -1,13 +1,14 @@
 ﻿@using Frontendtest.Objects
 @using System.Net.Http.Headers
 @using Microsoft.AspNetCore.Authentication
+@using System.Security.Claims
 @inject HttpClient Http
 
 
 
 <div class="container">
     <div class="row">
-        @if (messages == null)
+        @if (Load == false)
         {
             <div class="col-md-7 mx-auto">
                 <div class="card bg-white mt-5">
@@ -25,7 +26,6 @@
                 <div class="card bg-white mt-5">
                     <div class="card-body text-center">
                         <p>Je hebt nog geen berichten :(</p>
-                        
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
             else{
                 foreach (MessageDTO message in messages)
                 {
-                    <NewsMessage Message="@message.Message" path = "@message.Group" User = "@message.User" Title = "@message.Title" date = "@message.Date" />
+                    <NewsMessage Message="@message"  />
                 }
             }
         }
@@ -42,10 +42,27 @@
 </div>
 
 @code {
-    private List<MessageDTO>? messages;
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private List<MessageDTO> messages = new();
+    private List<Claim> roles;
+    private bool Load = false;
 
     protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateTask;
+
+        List<MessageDTO>?  allmessages = await Http.GetFromJsonAsync<List<MessageDTO>>("api/Message");
+        roles = state.User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+        foreach (Claim role in roles)
         {
-        messages = await Http.GetFromJsonAsync<List<MessageDTO>>("api/Message");
+            messages.AddRange(allmessages.Where(m => m.Group == role.Value));
         }
+        messages = messages.OrderByDescending((m => m.Date)).ToList();
+        await base.OnInitializedAsync();
+        Load = true;
+    }
+
+
 }
+
