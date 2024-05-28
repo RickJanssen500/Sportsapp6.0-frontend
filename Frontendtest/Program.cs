@@ -53,6 +53,11 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.XForwardedProto
 });
 
+app.UseRequestLocalization(new RequestLocalizationOptions
+{ 
+    DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("nl-NL")
+});
+
 app.UseStaticFiles();
 
 app.UseRouting();
