@@ -1,8 +1,10 @@
 ﻿@using Frontendtest.Objects
 @using System.Security.Claims
+@using System.Text
+@using System.Text.Json
 @inject NavigationManager Navigation
 
-<button class="btn btn-outline-danger" @onclick="OpenModal">Verwijder bericht</button>
+<button class="btn btn-outline-danger" @onclick="OpenModal">Verwijder account</button>
 
 @if (isModalOpen)
 {
@@ -10,12 +12,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Verwijder bericht</h5>
+                    <h5 class="modal-title">Verwijder account</h5>
                     <button type="button" class="btn-close" @onclick="CloseModal"></button>
                 </div>
                 <div class="modal-body">
 
-                        <p class="text-center">Weet je zeker dat je @formData.Title van @formData.Group wilt verwijderen?</p>
+                        <p class="text-center">Weet je zeker dat je je Account wilt verwijderen?</p>
                     <p class="text-center text-danger">Deze actie kun je niet terug draaien!</p>
                     <div class="d-flex justify-content-evenly">
                         <button @onclick="CloseModal" class="btn btn-primary">Anuleer</button>
@@ -29,8 +31,7 @@
 
 @code {
     private bool isModalOpen = false;
-    [Parameter]
-    public MessageDTO formData { get; set; }
+
 
     private void OpenModal()
     {
@@ -45,8 +46,30 @@
     private async Task HandleValidSubmit()
     {
         HttpClient _httpClient = new();
-        var response = await _httpClient.DeleteAsync(UrlProvider.url + "/message/" + formData.Id);
+        var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Delete,
+                RequestUri = new Uri(UrlProvider.userUrl + "/user/"),
+                Content = new StringContent(JsonSerializer.Serialize(user), Encoding.UTF8, "application/json")
+            };
+        var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
-        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        Navigation.NavigateTo("/Logout", true);
     }
+}
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    private UserDTO user = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthenticationStateTask;
+
+        user.UserName = state.User.Identity.Name ?? string.Empty;
+        user.UserId = state.User.Claims.Where(c => c.Type == ClaimTypes.PrimarySid).First().Value ?? string.Empty;
+        await base.OnInitializedAsync();
+    }
+
+
 }

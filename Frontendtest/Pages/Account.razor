@@ -1,5 +1,6 @@
 ﻿@page "/account"
 @using System.Security.Claims
+@using Frontendtest.Pages.Components;
 @attribute [Authorize]
 
 
@@ -26,6 +27,11 @@
                         }
                     }
                     </ul>
+                    <p class="text-danger"><b>Gevarenzone:</b></p>
+                    <UserDelete />
+                    <br/>
+                    <br/>
+                    <br/>
                     <div class="float-end">
                         <NavLink class="btn btn-outline-danger text-end" href="logout">
                             Log uit

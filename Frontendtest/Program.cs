@@ -32,6 +32,7 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
   .CreateClient("ExternalAPI"));
 
 UrlProvider.url = builder.Configuration["ExternalApiBaseUrl"];
+UrlProvider.userUrl = builder.Configuration["UserApiBaseUrl"];
 
 var app = builder.Build();
 
